@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="pag1.css">
+    <title>Dashboard Financeiro</title>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="sua-logo.png" alt="Logo">
+        </div>
+        <ul class="menu">
+            <li><a href="#inicio">Início</a></li>
+            <li><a href="#grafico">Gráfico</a></li>
+            <li><a href="#colaboracao">Colaboração</a></li>
+            <li><a href="#analise-dados">Análise de Dados</a></li>
+            <li><a href="#investimentos">Investimentos</a></li>
+        </ul>
+        <button class="login-btn">Entrar</button>
+    </nav>
+    <section id="inicio" class="presentation section zoomed-in">
+        <h1 class="title">Solução financeira para sua vida</h1>
+        <p>Empodere seu poder monetário com nossa plataforma única para gerenciar todos os aspectos da sua vida financeira.</p>
+        <div class="email-signup">
+            <input type="email" placeholder="Digite seu e-mail">
+            <button>Cadastre-se</button>
+        </div>
+    </section>
+    <section id="grafico" class="dashboard-container section">
+        <div class="dashboard">
+            <div class="top-row">
+                <div class="box">
+                    <p>Ganhos</p>
+                    <div class="value">R$ 10.000</div>
+                    <div class="percentage">+5%</div>
+                </div>
+                <div class="box">
+                    <p>Despesas</p>
+                    <div class="value">R$ 7.000</div>
+                    <div class="percentage">-2%</div>
+                </div>
+            </div>
+            <div class="bottom-row">
+                <div class="total-box">
+                    <p>Total</p>
+                    <div class="value">R$ 3.000</div>
+                    <button>Ver Detalhes</button>
+                </div>
+                <div class="chart-box">
+                    <canvas id="financialChart"></canvas>
+                </div>
+            </div>
+            <div class="rectangular-bar">
+                <div>Indicador 1</div>
+                <div>Indicador 2</div>
+                <div>Indicador 3</div>
+                <div>Indicador 4</div>
+            </div>
+        </div>
+        <div class="sub-title">Total/Renda Total/Custo total, funcionários/etc.</div>
+    </section>
+    <section id="colaboracao" class="presentation section">
+        <h1 class="title">Colaboração</h1>
+        <p>Trabalhe em conjunto com sua equipe para alcançar metas financeiras.</p>
+    </section>
+    <section id="analise-dados" class="presentation section">
+        <h1 class="title">Análise de Dados</h1>
+        <p>Obtenha insights profundos sobre suas finanças com nossos gráficos detalhados.</p>
+    </section>
+    <section id="investimentos" class="presentation section">
+        <h1 class="title">Investimentos</h1>
+        <p>Descubra as melhores oportunidades de investimento para crescer seu patrimônio.</p>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('financialChart').getContext('2d');
+        const financialChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'],
+                datasets: [{
+                    label: 'Ganhos',
+                    data: [5000, 10000, 7000, 8000, 12000, 15000],
+                    borderColor: '#76d47d',
+                    backgroundColor: 'rgba(118, 212, 125, 0.2)',
+                    fill: true,
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Meses',
+                            color: '#ffffff',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Valores (R$)',
+                            color: '#ffffff',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    zoom: {
+                        zoom: {
+                            wheel: {
+                                enabled: true
+                            },
+                            pinch: {
+                                enabled: true
+                            },
+                            mode: 'x',
+                        }
+                    }
+                }
+            }
+        });
+
+        document.querySelectorAll('.menu li a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.section').forEach(section => {
+                    section.classList.remove('zoomed-in');
+                    section.classList.add('zoomed-out');
+                });
+                const targetSection = document.querySelector(this.getAttribute('href'));
+                targetSection.classList.remove('zoomed-out');
+                targetSection.classList.add('zoomed-in');
+                window.scrollTo({
+                    top: targetSection.offsetTop,
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        let isDragging = false;
+        let startPosition = 0;
+
+        document.querySelector('.dashboard-container').addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startPosition = e.pageX - document.querySelector('.dashboard-container').scrollLeft;
+        });
+
+        document.querySelector('.dashboard-container').addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                const delta = e.pageX - document.querySelector('.dashboard-container').scrollLeft - startPosition;
+                document.querySelector('.dashboard-container').scrollLeft += delta;
+            }
+        });
+
+        document.querySelector('.dashboard-container').addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+    </script>
+</body>
+</html>
